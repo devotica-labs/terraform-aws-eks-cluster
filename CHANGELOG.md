@@ -17,7 +17,7 @@ driven by Conventional Commit prefixes (`feat:` → minor, `fix:`/`docs:`/`chore
 
 ### Features
 
-* native naming/tagging; remove the external null-label dependency ([bee032d](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/bee032df3a7b493758ada84fc194486c942e5ce6))
+* native, self-contained naming/tagging (no external naming module) ([bee032d](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/bee032df3a7b493758ada84fc194486c942e5ce6))
 
 
 ### Bug Fixes
