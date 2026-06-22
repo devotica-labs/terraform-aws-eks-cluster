@@ -43,7 +43,7 @@ Resource names compose from `namespace` / `environment` / `stage` / `name` (join
 ```hcl
 module "eks" {
   source  = "devotica-labs/eks-cluster/aws"
-  version = "~> 0.1"
+  version = "~> 1.0"
 
   namespace = "dvtca"
   stage     = "prod"
