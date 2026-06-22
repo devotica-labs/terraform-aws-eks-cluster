@@ -18,7 +18,7 @@ provider "aws" {
 module "eks" {
   source = "../.."
 
-  # Cluster name composes from null-label: dvtca-sandbox-platform
+  # Cluster name composes to: dvtca-sandbox-platform-cluster
   namespace = "dvtca"
   stage     = "sandbox"
   name      = "platform"

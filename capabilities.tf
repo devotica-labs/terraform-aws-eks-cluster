@@ -23,17 +23,6 @@ locals {
   }
 }
 
-# IAM roles for capabilities that don't provide their own
-module "capability_label" {
-  for_each = local.capability_keys_needing_roles
-
-  source  = "cloudposse/label/null"
-  version = "0.25.0"
-
-  attributes = ["capability", each.key]
-  context    = module.this.context
-}
-
 data "aws_iam_policy_document" "capability_assume_role" {
   count = length(local.capability_keys_needing_roles) > 0 ? 1 : 0
 
@@ -51,9 +40,9 @@ data "aws_iam_policy_document" "capability_assume_role" {
 resource "aws_iam_role" "capability" {
   for_each = local.capability_keys_needing_roles
 
-  name                 = module.capability_label[each.key].id
+  name                 = local.capability_ids[each.key]
   assume_role_policy   = one(data.aws_iam_policy_document.capability_assume_role[*].json)
-  tags                 = module.capability_label[each.key].tags
+  tags                 = local.tags
   permissions_boundary = var.permissions_boundary
 }
 
@@ -65,7 +54,7 @@ resource "aws_eks_capability" "default" {
   type                      = var.capabilities[each.value].type
   role_arn                  = local.capability_role_arns[each.value]
   delete_propagation_policy = var.capabilities[each.value].delete_propagation_policy
-  tags                      = module.label.tags
+  tags                      = local.tags
 
   dynamic "configuration" {
     # The AWS API requires configuration with argo_cd and aws_idc for ARGOCD capabilities.

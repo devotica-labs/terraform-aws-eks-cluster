@@ -18,7 +18,7 @@ provider "aws" {
 module "eks" {
   source = "../.."
 
-  # Cluster name composes from null-label: dvtca-aps1-prod-payments
+  # Cluster name composes to: dvtca-aps1-prod-payments-cluster
   namespace   = "dvtca"
   environment = "aps1"
   stage       = "prod"

@@ -49,7 +49,7 @@ variable "eks_cluster_service_role_arn" {
 variable "kubernetes_version" {
   type        = string
   description = "Desired Kubernetes control plane version. Devotica pins a current, AWS-supported version rather than letting it float; bump deliberately and test in sandbox first."
-  # Devotica fintech default: cloudposse ships "1.21" (long EOL). Pin a current, supported minor.
+  # Devotica fintech default: the upstream default is "1.21" (long EOL). Pin a current, supported minor.
   default = "1.31"
 }
 
@@ -67,21 +67,21 @@ variable "oidc_provider_enabled" {
 variable "endpoint_private_access" {
   type        = bool
   description = "Whether the Amazon EKS private API server endpoint is enabled. Devotica defaults this ON so the control plane is reachable from inside the VPC."
-  # Devotica fintech default: cloudposse/EKS default is false; private access is required for a private-only endpoint.
+  # Devotica fintech default: the EKS resource default is false; private access is required for a private-only endpoint.
   default = true
 }
 
 variable "endpoint_public_access" {
   type        = bool
   description = "Whether the Amazon EKS public API server endpoint is enabled. Devotica defaults this OFF — the API is reachable only from inside the VPC (or via a bastion/VPN). Set true only with a narrowed public_access_cidrs."
-  # Devotica fintech default: cloudposse/EKS default is true (internet-exposed API); we close it.
+  # Devotica fintech default: the EKS resource default is true (internet-exposed API); we close it.
   default = false
 }
 
 variable "public_access_cidrs" {
   type        = list(string)
   description = "CIDR blocks allowed to reach the public EKS API endpoint (only relevant when `endpoint_public_access = true`). Devotica defaults to an empty list: when you opt into the public endpoint you must supply your own office/VPN allow-list — the `public_endpoint_restricted` check refuses 0.0.0.0/0."
-  # Devotica fintech default: cloudposse/EKS default is ["0.0.0.0/0"] (internet-open).
+  # Devotica fintech default: the EKS resource default is ["0.0.0.0/0"] (internet-open).
   # Empty by default — inert while the endpoint is private; forces an explicit
   # allow-list if the public endpoint is ever enabled.
   default = []
@@ -105,14 +105,14 @@ variable "kubernetes_network_ipv6_enabled" {
 variable "enabled_cluster_log_types" {
   type        = list(string)
   description = "Control plane log types to ship to CloudWatch. Possible values [`api`, `audit`, `authenticator`, `controllerManager`, `scheduler`]. Devotica enables all five — `audit` and `authenticator` are the ones auditors ask for."
-  # Devotica fintech default: cloudposse ships [] (no control-plane logging). Enable the full set.
+  # Devotica fintech default: the upstream default is [] (no control-plane logging). Enable the full set.
   default = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 }
 
 variable "cluster_log_retention_period" {
   type        = number
   description = "Number of days to retain control plane logs. Devotica defaults to 365 to satisfy typical fintech retention requirements."
-  # Devotica fintech default: cloudposse ships 0 (never expire / unset). Pin a 1-year retention.
+  # Devotica fintech default: the upstream default is 0 (never expire / unset). Pin a 1-year retention.
   default = 365
 }
 
@@ -137,7 +137,7 @@ variable "cluster_encryption_config_kms_key_enable_key_rotation" {
 variable "cluster_encryption_config_kms_key_deletion_window_in_days" {
   type        = number
   description = "Cluster Encryption Config KMS Key Resource argument - key deletion window in days post destruction."
-  # Devotica fintech default: widen cloudposse's 10-day window to 30 (more recovery runway for a secrets-encryption key).
+  # Devotica fintech default: widen the default 10-day window to 30 (more recovery runway for a secrets-encryption key).
   default = 30
 }
 
@@ -205,7 +205,6 @@ variable "addons_depends_on" {
   description = <<-EOT
     If provided, all addons will depend on this object, and therefore not be installed until this object is finalized.
     This is useful if you want to ensure that addons are not applied before some other condition is met, e.g. node groups are created.
-    See [issue #170](https://github.com/cloudposse/terraform-aws-eks-cluster/issues/170) for more details.
     EOT
   default     = null
 }
@@ -219,7 +218,7 @@ variable "bootstrap_self_managed_addons_enabled" {
 variable "deletion_protection_enabled" {
   description = "Whether to enable deletion protection for the cluster. When enabled, the cluster cannot be deleted until deletion protection is first disabled. Devotica defaults this ON for production-grade safety."
   type        = bool
-  # Devotica fintech default: cloudposse ships false; protect the cluster from accidental destroy.
+  # Devotica fintech default: the upstream default is false; protect the cluster from accidental destroy.
   default = true
 }
 
@@ -350,7 +349,7 @@ variable "zonal_shift_config" {
 
 variable "cluster_attributes" {
   type        = list(string)
-  description = "Override label module default cluster attributes"
+  description = "Extra name segments appended after `name` when composing the cluster name. Default `[\"cluster\"]` yields e.g. `dvtca-prod-payments-cluster`."
   default     = ["cluster"]
 }
 

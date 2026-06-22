@@ -5,50 +5,18 @@ This product includes software developed at Devotica Labs
 (https://github.com/devotica-labs).
 
 ================================================================================
-DERIVATIVE WORK — ATTRIBUTION
-================================================================================
 
-This module is a derivative work of:
+Portions of the EKS control-plane Terraform configuration in this module
+(the cluster resource, IAM service role, OIDC provider, EKS access entries,
+add-ons, and capabilities) originate from an Apache-2.0 licensed upstream
+project. Those portions remain under the Apache License, Version 2.0, a copy
+of which is included as LICENSE.
 
-    cloudposse/terraform-aws-eks-cluster
-    Copyright Cloud Posse, LLC (https://cloudposse.com)
-    Licensed under the Apache License, Version 2.0
-
-The original Terraform configuration for the EKS control plane, IAM service
-role, OIDC provider, security-group rules, EKS access entries, add-ons,
-capabilities, and EKS Auto Mode (main.tf, auth.tf, capabilities.tf,
-security-group.tf, iam.tf, outputs.tf, variables.tf) was authored by Cloud
-Posse and is used here under the terms of the Apache-2.0 license. The
-upstream LICENSE is retained verbatim in this repository.
-
-`context.tf` is the standard Cloud Posse `terraform-null-label` exports file
-and remains under its original header.
-
---------------------------------------------------------------------------------
-Modifications made by Devotica Labs (Apache-2.0 §4(b) "stated changes")
---------------------------------------------------------------------------------
-
-  * Hardened input DEFAULTS to a fintech-safe posture (see the `# Devotica
-    fintech default` annotations in variables.tf):
-      - endpoint_private_access      false -> true
-      - endpoint_public_access       true  -> false   (private-only API by default)
-      - oidc_provider_enabled        false -> true     (IRSA on by default)
-      - enabled_cluster_log_types    []    -> all five control-plane log types
-      - cluster_log_retention_period 0     -> 365 days
-      - deletion_protection_enabled  false -> true
-      - kubernetes_version           1.21  -> 1.31      (current supported minor)
-      - encryption-config KMS key deletion window 10 -> 30 days
-  * Added a `check "public_endpoint_restricted"` guardrail (main.tf) that
-    flags an open public endpoint left at 0.0.0.0/0.
-  * Replaced the upstream Cloud Posse CI/CD, issue templates, Atmos config,
-    and Go (terratest) suite with the Devotica governance shape: the central
-    reusable CI from devotica-labs/terraform-shared-config, conftest policies
-    from devotica-labs/terraform-policies, release-please + cosign keyless
-    signing + CycloneDX SBOMs, terraform-docs auto-update, Dependabot
-    auto-merge, a Python architecture-diagram renderer, and native
-    `terraform test` unit/contract/integration suites.
-  * Rewrote README.md, examples/, and added SECURITY.md, CODE_OF_CONDUCT.md,
-    CONTRIBUTING.md, CHANGELOG.md, NOTICE.
+This module has been substantially modified by Devotica Labs: fintech-hardened
+input defaults, native (non-vendored) resource naming and tagging, a public-
+endpoint guardrail, and the Devotica governance/CI shape (central reusable CI,
+conftest policies, release-please + cosign + CycloneDX SBOM, terraform-docs,
+Dependabot auto-merge, and native `terraform test` suites).
 
 ================================================================================
 

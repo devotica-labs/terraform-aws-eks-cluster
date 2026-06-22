@@ -65,7 +65,7 @@ resource "aws_eks_access_entry" "map" {
   kubernetes_groups = each.value.kubernetes_groups
   type              = each.value.type
 
-  tags = module.this.tags
+  tags = local.base_tags
 }
 
 resource "aws_eks_access_policy_association" "map" {
@@ -99,7 +99,7 @@ resource "aws_eks_access_entry" "standard" {
   kubernetes_groups = var.access_entries[count.index].kubernetes_groups
   type              = "STANDARD"
 
-  tags = module.this.tags
+  tags = local.base_tags
 }
 
 resource "aws_eks_access_entry" "linux" {
@@ -109,7 +109,7 @@ resource "aws_eks_access_entry" "linux" {
   principal_arn = var.access_entries_for_nodes.EC2_LINUX[count.index]
   type          = "EC2_LINUX"
 
-  tags = module.this.tags
+  tags = local.base_tags
 }
 
 resource "aws_eks_access_entry" "windows" {
@@ -119,7 +119,7 @@ resource "aws_eks_access_entry" "windows" {
   principal_arn = var.access_entries_for_nodes.EC2_WINDOWS[count.index]
   type          = "EC2_WINDOWS"
 
-  tags = module.this.tags
+  tags = local.base_tags
 }
 
 resource "aws_eks_access_policy_association" "list" {
