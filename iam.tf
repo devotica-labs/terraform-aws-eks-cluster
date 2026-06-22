@@ -82,7 +82,13 @@ resource "aws_iam_policy" "cluster_elb_service_role" {
   name   = "${module.label.id}-ServiceRole"
   policy = one(data.aws_iam_policy_document.cluster_elb_service_role[*].json)
 
-  tags = module.this.tags
+  # Devotica waiver (no_iam_wildcards OPA policy, Foundation Plan §11.2):
+  # this policy's ec2:Describe* and elasticloadbalancing:Set* actions can only
+  # be granted at Resource="*" — AWS does not support resource-level scoping
+  # for them. The DevoticaWaiver tag documents the intentional wildcard.
+  tags = merge(module.this.tags, {
+    DevoticaWaiver = "ec2:Describe*/elasticloadbalancing:Set* require Resource=* (no resource-level scoping in AWS)"
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_elb_service_role" {

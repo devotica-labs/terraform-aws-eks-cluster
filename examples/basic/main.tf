@@ -36,6 +36,8 @@ module "eks" {
     Environment = "sandbox"
     Project     = "terraform-aws-eks-cluster"
     Owner       = "platform@devotica.com"
+    CostCenter  = "PLATFORM-OSS"
     ManagedBy   = "Terraform"
+    Repo        = "https://github.com/devotica-labs/terraform-aws-eks-cluster"
   }
 }

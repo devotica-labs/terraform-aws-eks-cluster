@@ -70,5 +70,6 @@ module "eks" {
     Owner       = "platform@devotica.com"
     CostCenter  = "PLATFORM"
     ManagedBy   = "Terraform"
+    Repo        = "https://github.com/devotica-labs/terraform-aws-eks-cluster"
   }
 }
