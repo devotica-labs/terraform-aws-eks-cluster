@@ -1,0 +1,23 @@
+# CODEOWNERS for terraform-aws-eks-cluster
+#
+# This module mints the EKS control plane, its IAM service role + OIDC trust,
+# the secrets-encryption KMS key, and the API-endpoint exposure surface.
+# Security has equity in every file.
+#
+# Per Module-Repo Plan v1.3 §16 governance.
+
+# Default: every change requires both teams to approve.
+*                          @devotica-labs/cloud-leads @devotica-labs/security
+
+# Security-primary: cluster config + endpoint exposure, IAM roles/OIDC,
+# access entries, the managed security-group rules, and the input surface
+# that carries the hardened defaults.
+/main.tf                   @devotica-labs/security @devotica-labs/cloud-leads
+/iam.tf                    @devotica-labs/security @devotica-labs/cloud-leads
+/auth.tf                   @devotica-labs/security @devotica-labs/cloud-leads
+/security-group.tf         @devotica-labs/security @devotica-labs/cloud-leads
+/variables.tf              @devotica-labs/security @devotica-labs/cloud-leads
+
+# CI/CD pipelines.
+/.github/                  @devotica-labs/cloud-leads @devotica-labs/security
+/.github/workflows/        @devotica-labs/cloud-leads @devotica-labs/security

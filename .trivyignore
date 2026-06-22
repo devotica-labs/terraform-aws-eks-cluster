@@ -1,0 +1,14 @@
+# Trivy/tfsec ignores for terraform-aws-eks-cluster. Each entry uses an AVD-
+# prefixed ID (required when a resource is scanned through a module call) and
+# carries a justification. Keep this list tight — prefer fixing at the source.
+
+# AVD-AWS-0017 — "CloudWatch log group is not encrypted with a customer-managed key".
+#
+# Applies to aws_cloudwatch_log_group.default (the EKS control-plane log group
+# in main.tf). Control-plane logs are encrypted at rest with an AWS-managed key
+# by default; a customer-managed key is bring-your-own via
+# `cloudwatch_log_group_kms_key_id`. We don't force a module-created CMK here
+# because the CloudWatch Logs service must be granted usage on that key via its
+# key policy, which belongs with the caller's KMS module (terraform-aws-kms),
+# not inlined per-cluster. examples/complete demonstrates supplying a key.
+AVD-AWS-0017
