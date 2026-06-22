@@ -50,21 +50,22 @@ locals {
   # Ordered name segments: namespace - environment - stage - name [- attributes]
   name_segments = [var.namespace, var.environment, var.stage, var.name]
 
-  id_base = join(var.delimiter, compact(local.name_segments))
-  id      = join(var.delimiter, compact(concat(local.name_segments, var.cluster_attributes)))
+  # Cluster id (name_segments + cluster_attributes, e.g. ["cluster"]).
+  id = join(var.delimiter, compact(concat(local.name_segments, var.cluster_attributes)))
 
   # Identity tags generated from the set name segments, merged under the
   # caller's tags (caller tags win on conflict).
-  _identity_tags = {
+  identity_tags = { for k, v in {
     Name        = local.id
     Namespace   = var.namespace
     Environment = var.environment
     Stage       = var.stage
-  }
-  tags      = merge({ for k, v in local._identity_tags : k => v if v != null && v != "" }, var.tags)
+  } : k => v if v != null && v != "" }
+
+  tags      = merge(local.identity_tags, var.tags)
   base_tags = local.tags
 
-  # Capability resource names: <id_base>-capability-<key>
+  # Capability resource names: <segments>-capability-<key>
   capability_ids = {
     for k in local.enabled_capability_keys : k =>
     join(var.delimiter, compact(concat(local.name_segments, ["capability", k])))
