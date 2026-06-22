@@ -28,13 +28,13 @@ variables {
   service_ipv4_cidr = "172.20.0.0/16"
 }
 
-run "cluster_name_composed_from_null_label" {
+run "cluster_name_composed_from_segments" {
   command = plan
-  # null-label appends the default cluster_attributes = ["cluster"], so the id
+  # the default cluster_attributes = ["cluster"], so the id
   # is namespace-stage-name-cluster.
   assert {
     condition     = aws_eks_cluster.default[0].name == "dvtca-test-contract-cluster"
-    error_message = "Cluster name must compose namespace-stage-name-cluster via null-label."
+    error_message = "Cluster name must compose namespace-stage-name-cluster via name segments."
   }
 }
 

@@ -11,3 +11,4 @@ crash.log
 .vscode/
 *.tfvars
 !examples/**/*.tfvars
+.terraform.lock.hcl

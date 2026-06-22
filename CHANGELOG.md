@@ -8,39 +8,30 @@ Releases are cut automatically by `release-please` on merge to `main`,
 driven by Conventional Commit prefixes (`feat:` → minor, `fix:`/`docs:`/`chore:` → patch,
 `feat!:` or `BREAKING CHANGE:` footer → major).
 
-## [Unreleased]
+## [1.0.0](https://github.com/devotica-labs/terraform-aws-eks-cluster/compare/v0.1.0...v1.0.0) (2026-06-22)
 
-### Added
-- Initial module, derived from [`cloudposse/terraform-aws-eks-cluster`](https://github.com/cloudposse/terraform-aws-eks-cluster)
-  (Apache-2.0) — see [`NOTICE`](NOTICE) for full attribution.
-- EKS control plane with IAM service role (create or bring-your-own),
-  `null-label` naming, and Cloud Posse's access-entry / access-policy
-  surface, EKS add-ons, EKS capabilities (Argo CD / ACK / KRO), and EKS
-  Auto Mode passthrough.
-- OIDC identity provider for IRSA (default **on**).
-- Secrets envelope encryption via a module-managed KMS key (rotation on,
-  30-day deletion window) or a bring-your-own key.
-- Control-plane logging to CloudWatch — all five log types at 365-day
-  retention by default.
 
-### Changed (Devotica fintech-hardened defaults vs. upstream)
-- `endpoint_private_access` → `true`, `endpoint_public_access` → `false`
-  (private-only Kubernetes API by default).
-- `oidc_provider_enabled` → `true`.
-- `enabled_cluster_log_types` → all five; `cluster_log_retention_period` → `365`.
-- `deletion_protection_enabled` → `true`.
-- `kubernetes_version` default → `1.31` (upstream ships the EOL `1.21`).
-- Encryption-config KMS key deletion window → 30 days.
-- Added a `check "public_endpoint_restricted"` guardrail flagging an open
-  public endpoint left at `0.0.0.0/0`.
+### ⚠ BREAKING CHANGES
 
-### Replaced (governance)
-- Upstream Cloud Posse CI/CD, Atmos config, issue templates, and Go
-  (terratest) suite replaced with the Devotica shape: central reusable CI,
-  conftest policies, release-please + cosign + CycloneDX SBOM,
-  terraform-docs auto-update, Dependabot auto-merge, Python
-  architecture-diagram renderer, and native `terraform test` suites.
+* the advanced label inputs (label_order, regex_replace_chars, id_length_limit, label_key_case, label_value_case, descriptor_formats, additional_tag_map, labels_as_tags, attributes, context) are removed. The commonly-used inputs (namespace, environment, stage, name, delimiter, tags, enabled) are preserved with identical behaviour.
 
-### Deferred to later versions
-- Managed node groups / Karpenter wiring (separate module).
-- A `sample-infra/eks` consumer service.
+### Features
+
+* native, self-contained naming/tagging (no external naming module) ([bee032d](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/bee032df3a7b493758ada84fc194486c942e5ce6))
+
+
+### Bug Fixes
+
+* tflint — drop unused local.id_base, rename non-snake_case local ([4bb8837](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/4bb8837c38d7601ba7edb793f320b86b2544d3e7))
+
+## 0.1.0 (2026-06-22)
+
+
+### Features
+
+* initial EKS control-plane module (fintech-hardened) ([482cc92](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/482cc92272fe30ac8af67c99873424804020a1b5))
+
+
+### Bug Fixes
+
+* satisfy Devotica OPA policies (mandatory tags + IAM wildcard waiver) ([2816403](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/28164030bec154fd6080b012f826c904c2b6191f))

@@ -28,7 +28,7 @@ variables {
   stage      = "test"
   name       = "unit"
   subnet_ids = ["subnet-aaaaaaaaaaaaaaaaa", "subnet-bbbbbbbbbbbbbbbbb"]
-  # Set so the kubernetes_network_config block renders (the cloudposse
+  # Set so the kubernetes_network_config block renders (the module
   # outputs index [0] on it; under mock an empty block is known-empty, not
   # unknown). Harmless to the assertions below.
   service_ipv4_cidr = "172.20.0.0/16"

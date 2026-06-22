@@ -18,7 +18,7 @@ provider "aws" {
 module "eks" {
   source = "../.."
 
-  # Cluster name composes from null-label: dvtca-sandbox-platform
+  # Cluster name composes to: dvtca-sandbox-platform-cluster
   namespace = "dvtca"
   stage     = "sandbox"
   name      = "platform"
@@ -36,6 +36,8 @@ module "eks" {
     Environment = "sandbox"
     Project     = "terraform-aws-eks-cluster"
     Owner       = "platform@devotica.com"
+    CostCenter  = "PLATFORM-OSS"
     ManagedBy   = "Terraform"
+    Repo        = "https://github.com/devotica-labs/terraform-aws-eks-cluster"
   }
 }

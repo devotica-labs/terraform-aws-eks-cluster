@@ -24,9 +24,9 @@ data "aws_iam_policy_document" "assume_role" {
 resource "aws_iam_role" "default" {
   count = local.create_eks_service_role ? 1 : 0
 
-  name                 = module.label.id
+  name                 = local.id
   assume_role_policy   = one(data.aws_iam_policy_document.assume_role[*].json)
-  tags                 = module.label.tags
+  tags                 = local.tags
   permissions_boundary = var.permissions_boundary
 }
 
@@ -79,10 +79,16 @@ data "aws_iam_policy_document" "cluster_elb_service_role" {
 resource "aws_iam_policy" "cluster_elb_service_role" {
   count = local.create_eks_service_role ? 1 : 0
 
-  name   = "${module.label.id}-ServiceRole"
+  name   = "${local.id}-ServiceRole"
   policy = one(data.aws_iam_policy_document.cluster_elb_service_role[*].json)
 
-  tags = module.this.tags
+  # Devotica waiver (no_iam_wildcards OPA policy, Foundation Plan §11.2):
+  # this policy's ec2:Describe* and elasticloadbalancing:Set* actions can only
+  # be granted at Resource="*" — AWS does not support resource-level scoping
+  # for them. The DevoticaWaiver tag documents the intentional wildcard.
+  tags = merge(local.base_tags, {
+    DevoticaWaiver = "ec2:Describe*/elasticloadbalancing:Set* require Resource=* (no resource-level scoping in AWS)"
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_elb_service_role" {

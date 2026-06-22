@@ -1,5 +1,5 @@
 locals {
-  enabled = module.this.enabled
+  enabled = var.enabled
 
   use_ipv6 = var.kubernetes_network_ipv6_enabled
 
@@ -13,7 +13,7 @@ locals {
     ) : var.cluster_encryption_config_kms_key_id
   }
 
-  cloudwatch_log_group_name = "/aws/eks/${module.label.id}/cluster"
+  cloudwatch_log_group_name = "/aws/eks/${local.id}/cluster"
 
   # EKS Auto Mode
   auto_mode_flags = [
@@ -49,15 +49,6 @@ check "public_endpoint_restricted" {
   }
 }
 
-module "label" {
-  source  = "cloudposse/label/null"
-  version = "0.25.0"
-
-  attributes = var.cluster_attributes
-
-  context = module.this.context
-}
-
 data "aws_partition" "current" {
   count = local.enabled ? 1 : 0
 }
@@ -67,22 +58,22 @@ resource "aws_cloudwatch_log_group" "default" {
   name              = local.cloudwatch_log_group_name
   retention_in_days = var.cluster_log_retention_period
   kms_key_id        = var.cloudwatch_log_group_kms_key_id
-  tags              = module.label.tags
+  tags              = local.tags
   log_group_class   = var.cloudwatch_log_group_class
 }
 
 resource "aws_kms_key" "cluster" {
   count                   = local.enabled && var.cluster_encryption_config_enabled && var.cluster_encryption_config_kms_key_id == "" ? 1 : 0
-  description             = "EKS Cluster ${module.label.id} Encryption Config KMS Key"
+  description             = "EKS Cluster ${local.id} Encryption Config KMS Key"
   enable_key_rotation     = var.cluster_encryption_config_kms_key_enable_key_rotation
   deletion_window_in_days = var.cluster_encryption_config_kms_key_deletion_window_in_days
   policy                  = var.cluster_encryption_config_kms_key_policy
-  tags                    = module.label.tags
+  tags                    = local.tags
 }
 
 resource "aws_kms_alias" "cluster" {
   count         = local.enabled && var.cluster_encryption_config_enabled && var.cluster_encryption_config_kms_key_id == "" ? 1 : 0
-  name          = format("alias/%v", module.label.id)
+  name          = format("alias/%v", local.id)
   target_key_id = one(aws_kms_key.cluster[*].key_id)
 }
 
@@ -90,8 +81,8 @@ resource "aws_eks_cluster" "default" {
   #bridgecrew:skip=BC_AWS_KUBERNETES_1:Allow permissive security group for public access, difficult to restrict without a VPN
   #bridgecrew:skip=BC_AWS_KUBERNETES_4:Let user decide on control plane logging, not necessary in non-production environments
   count                         = local.enabled ? 1 : 0
-  name                          = module.label.id
-  tags                          = module.label.tags
+  name                          = local.id
+  tags                          = local.tags
   role_arn                      = local.eks_service_role_arn
   version                       = var.kubernetes_version
   enabled_cluster_log_types     = var.enabled_cluster_log_types
@@ -246,7 +237,7 @@ data "tls_certificate" "cluster" {
 resource "aws_iam_openid_connect_provider" "default" {
   count = local.enabled && var.oidc_provider_enabled ? 1 : 0
   url   = one(aws_eks_cluster.default[*].identity[0].oidc[0].issuer)
-  tags  = module.label.tags
+  tags  = local.tags
 
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [one(data.tls_certificate.cluster[*].certificates[0].sha1_fingerprint)]
@@ -275,7 +266,7 @@ resource "aws_eks_addon" "cluster" {
     }
   }
 
-  tags = merge(module.label.tags, each.value.additional_tags)
+  tags = merge(local.tags, each.value.additional_tags)
 
   depends_on = [
     var.addons_depends_on,
