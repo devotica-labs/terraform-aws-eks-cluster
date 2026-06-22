@@ -8,6 +8,22 @@ Releases are cut automatically by `release-please` on merge to `main`,
 driven by Conventional Commit prefixes (`feat:` → minor, `fix:`/`docs:`/`chore:` → patch,
 `feat!:` or `BREAKING CHANGE:` footer → major).
 
+## [1.0.0](https://github.com/devotica-labs/terraform-aws-eks-cluster/compare/v0.1.0...v1.0.0) (2026-06-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* the advanced label inputs (label_order, regex_replace_chars, id_length_limit, label_key_case, label_value_case, descriptor_formats, additional_tag_map, labels_as_tags, attributes, context) are removed. The commonly-used inputs (namespace, environment, stage, name, delimiter, tags, enabled) are preserved with identical behaviour.
+
+### Features
+
+* native naming/tagging; remove the external null-label dependency ([bee032d](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/bee032df3a7b493758ada84fc194486c942e5ce6))
+
+
+### Bug Fixes
+
+* tflint — drop unused local.id_base, rename non-snake_case local ([4bb8837](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/4bb8837c38d7601ba7edb793f320b86b2544d3e7))
+
 ## 0.1.0 (2026-06-22)
 
 
