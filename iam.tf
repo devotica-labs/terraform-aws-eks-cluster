@@ -87,7 +87,7 @@ resource "aws_iam_policy" "cluster_elb_service_role" {
   # be granted at Resource="*" — AWS does not support resource-level scoping
   # for them. The DevoticaWaiver tag documents the intentional wildcard.
   tags = merge(local.base_tags, {
-    DevoticaWaiver = "ec2:Describe and elasticloadbalancing:Set actions require Resource=all, no resource-level scoping in AWS"
+    DevoticaWaiver = "ec2 Describe and elasticloadbalancing Set actions require Resource=all - no resource-level scoping in AWS"
   })
 }
 
