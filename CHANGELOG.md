@@ -8,6 +8,16 @@ Releases are cut automatically by `release-please` on merge to `main`,
 driven by Conventional Commit prefixes (`feat:` → minor, `fix:`/`docs:`/`chore:` → patch,
 `feat!:` or `BREAKING CHANGE:` footer → major).
 
+## [1.0.1](https://github.com/devotica-labs/terraform-aws-eks-cluster/compare/v1.0.0...v1.0.1) (2026-07-11)
+
+
+### Bug Fixes
+
+* remove comma from DevoticaWaiver tag value ([5cb6111](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/5cb6111c660fb805fe4079a651c9a23fc9cf14d8))
+* remove comma from DevoticaWaiver tag value ([e7fadbd](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/e7fadbd7967a119cc27cdb79295a0bf0801d891f))
+* remove invalid characters from DevoticaWaiver IAM tag value ([81af125](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/81af1255c87bec95a6f48710861cdc92fe7fc1e1))
+* remove invalid characters from DevoticaWaiver IAM tag value ([573e72a](https://github.com/devotica-labs/terraform-aws-eks-cluster/commit/573e72a53db521369467017d78d8dd2ea888d4e8))
+
 ## [1.0.0](https://github.com/devotica-labs/terraform-aws-eks-cluster/compare/v0.1.0...v1.0.0) (2026-06-22)
 
 
